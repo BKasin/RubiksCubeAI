@@ -22,7 +22,6 @@ class TurnO {
   
   
   void printTurn(){
-    println("axis: " + axis +", index " + index + ", isclockwise " +clockwise);  
     
   }
   

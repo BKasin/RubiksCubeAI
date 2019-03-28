@@ -13,6 +13,10 @@ class Cube {
   boolean turningWholeCube = false;
   boolean scrambling = true;
   float rotationSpeed = PI/20.0;
+  
+  PVector[] edgeCenters = {new PVector(middle, 0, 0), new PVector(n-1, 0, middle), new PVector(middle, 0, n-1), 
+  new PVector(0, 0, middle), new PVector(middle, n-1, 0), new PVector(0, n-1, middle), new PVector(middle, n-1, n-1), new PVector(n-1, n-1, middle), 
+  new PVector(0, middle, 0), new PVector(n-1, middle, 0), new PVector(0, middle, n-1), new PVector(n-1, middle, n-1)};
 
   CubeAlgorithms algos;
   Cube() {
@@ -616,7 +620,6 @@ class Cube {
       return faceArr;
     }
 
-    println("Fuck");
     return null;
   }
 }

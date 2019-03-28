@@ -6,7 +6,7 @@
 //Have fun
 
 int numberOfSides = 25;//<<< change this to change the size of the cube
-float cubeSpeed = PI/20.0; //<<< this is the speed that the cube rotates 
+float cubeSpeed = PI/35.0; //<<< this is the speed that the cube rotates 
 
 /*
   some controls
@@ -36,17 +36,17 @@ int middle = n/2;
 int faceWidth = blockWidth;
 int blacksShown = 0;
 int speedUpCounter = 1;
-boolean pause = true;
+boolean pause = false;
 int rotateYCounter = 0;
 int rotateXCounter = 0;
 Cube cube;
-int stageTestCounter =100;
+int stageTestCounter = 100;
 int scrambleCounter = 100;
 String turns = "";
 ArrayList<TurnO> turnOs = new ArrayList();
 
 int moveCount = 0;
-int solveCounter =0;
+int solveCounter = 0;
 
 boolean fixCubeRotation = false;
 float  XRotationCompensation = 0;
@@ -78,9 +78,7 @@ int previousLargeCubeStageNo = 0;
 
 boolean actualPause = false;
 PVector lockedMousePos = new PVector();
-PVector[] edgeCenters= {new PVector(middle, 0, 0), new PVector(n-1, 0, middle), new PVector(middle, 0, n-1), 
-  new PVector(0, 0, middle), new PVector(middle, n-1, 0), new PVector(0, n-1, middle), new PVector(middle, n-1, n-1), new PVector(n-1, n-1, middle), 
-  new PVector(0, middle, 0), new PVector(n-1, middle, 0), new PVector(0, middle, n-1), new PVector(n-1, middle, n-1)};
+
 
 boolean firstPause = true;
 
@@ -89,12 +87,12 @@ boolean enableMouseX = true;
 boolean enableMouseY = true;
 boolean enableSpin = false;
 boolean autoShow = false;
-boolean repeatSolves = false;
-int solveCounterThing =0;
-int startTime =0;
+boolean repeatSolves = true;
+int solveCounterThing = 0;
+int startTime = 0;
+
 void setup() {
   size(1000, 1000, P3D);
-  //size(2000, 2000, P3D); //if you've got a 4K monitor then you can uncomment this out to have a bigger window, also make sure to comment out the line before 
 
   //turns+= "FFULL";
   cube = new Cube();
@@ -107,13 +105,18 @@ void setup() {
 }
 
 void resetCube() {
+  blockWidth = 400/numberOfSides;
+  n = numberOfSides;
+  middle = n/2;
+  faceWidth = blockWidth;
+
   cube = new Cube();
   cube.algos.scramble();
 }
 
 void draw() {
   if (!actualPause) {
-
+    
     if (autoShow) {
       if (!pause && !cube.scrambling && cubeSpeed < PI) {
         if (cubeSpeed > PI/3) {
@@ -124,25 +127,21 @@ void draw() {
         }
       }
     }
-    println(cubeSpeed, PI);
     //cubeSpeed = PI;
     cube.rotationSpeed = cubeSpeed;
     //if (showingOffFace) {
-    //  //pause = true;
+    //  //pause = false;
     //  float wholeCubeRotationSpeed = 2;
     //  yRotationKey += yTargetRotation-yRotationKey/ abs(yRotationKey-yTargetRotation)*wholeCubeRotationSpeed;
     //  xRotationKey += xTargetRotation-xRotationKey/ abs(xRotationKey-xTargetRotation)*wholeCubeRotationSpeed;
     //}
 
-
-    //println(frameRate);
     pushMatrix();
 
     translate(width/2, height/2, 0);
     rotateX(-PI/6);
     if (autoShow) {
       if (!lockRotation && pause && spinCounter/rotationSpeed>2*PI) {
-        //println(spinCounter);
         pause = false;
         lockRotation=true;
         spinCounter = 0;
@@ -191,7 +190,6 @@ void draw() {
       rotateY(PI/5- yRotationKey);
       rotateX(-xRotationKey);
     } else {
-      //println(lockedMousePos, mouseX, mouseY);
 
       if (enableMouseY) {
         rotateX(-xRotationKey +((lockedMousePos.y -mouseY))/rotationSpeed);
@@ -243,20 +241,23 @@ void draw() {
     //  if (cube.algos.stageNo ==5) {
     //        cube.rotationSpeed = PI/1.0;
 
-    //    //pause = true;
+    //    //pause = false;
     //  }
     //}
     if (pause) {
       //print("paused");
     }
     if (!autoShow || cube.algos.largeCubeStageNo > 5) {
-      background(255);
+      background(0);
       cube.show();
-      //saveFrame(n+"x" + n+"_rubiksCube_part2/"+ n+"x" + n+"_rubiksCube#########.jpg");
+      
+      text("Times solved: " + solveCounterThing, 10, 30);
     } else {
       if (frameCount%10==0) {
-        background(255);
+        background(0);
         cube.show();
+        
+        text("Times solved: " + solveCounterThing, 10, 30);
       }
     }
     int upTo =30;
@@ -289,7 +290,7 @@ void draw() {
 
             if (previousLargeCubeStageNo!= 3 && previousLargeCubeStageNo!= 5 && previousLargeCubeStageNo!= 7) {
               spinCounter =0;
-              pause = true;
+              pause = false;
               lockRotation = false;
               cubeSpeed = PI/60.0;
             }
@@ -304,7 +305,7 @@ void draw() {
       if (!cube.scrambling && justScrambled) {
 
         //cubeSpeed= PI;
-        pause = true;
+        pause = false;
         if (autoShow) {
           upTo=1;
           cubeSpeed = PI/60.0;
@@ -410,20 +411,16 @@ void doTurn() {
   if (turns.length() > 0 && turns.charAt(0) == '\'') {
     clockwise = false;
     turns = turns.substring(1, turns.length());
-    //println("Turning cube " + turn +"'");
     if (turns.length()>=4) {      
       if (turns.substring(0, 4).equals( "" + turn  + "'" + turn + "'")) {
-        //println("replaced: " +  turn + "'" + turns.substring(0, 4) + " with " +turn); 
 
         clockwise = true;
         turns = turns.substring(4, turns.length());
       }
     }
   } else {
-    //println("Turning cube " + turn);
     if (turns.length()>=2) {
       if (turns.charAt(0)== turn && turns.charAt(1) == turn) {
-        //println("replaced: " +  turn+ turns.substring(0, 2) + " with " +turn + "'"); 
         clockwise = false;
         turns = turns.substring(2, turns.length());
       }
@@ -475,7 +472,6 @@ void doTurn() {
 }
 
 void doTurnFromObj() {
-  //println("turnos");
   //input is a string e.g. RUL'DD
   //  void turnCube(int index, int xOrYOrZ, boolean turnClockwise) {
   TurnO turn = turnOs.remove(0);
@@ -563,7 +559,6 @@ void simulateRotation(int axis, boolean clockwise) {
 
 
 void printTurnos() {
-  println("turnos mamte");
   for (int i = 0; i< turnOs.size(); i++) { 
     turnOs.get(i).printTurn();
   }

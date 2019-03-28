@@ -107,16 +107,38 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
         if (repeatSolves) {
           if (globalTimer <4109) {
-
-
-            resetCube();
-            //pause = true;
-            println("new cube", solveCounterThing, globalTimer);
+            delay(1000);
+            pause = true;
+            
             solveCounterThing++;
+            
+            //if (numberOfSides <= 51) {
+            //  numberOfSides += 2;
+            //} else {
+            //  numberOfSides = 3;
+            //}
+            
+            delay(2000);
+            resetCube();
+            pause = false;
           } else {
-            pause = true; 
-            println("Solved " + solveCounterThing + " rubik's cubes in " +(globalTimer/1000.0)+ " seconds");
-            println("averageTime = " + (float(globalTimer)/float(solveCounterThing)));
+            delay(1000);
+            pause = true;
+            
+            solveCounterThing++;
+            println("Solved " + solveCounterThing + " rubiks cubes in " +(globalTimer/1000.0)+ " seconds");
+            println("AverageTime = " + (float(globalTimer)/float(solveCounterThing)) + " milliseconds");
+            println("Current amount of sides: " + numberOfSides);
+            
+            //if (numberOfSides <= 51) {
+            //  numberOfSides += 2;
+            //} else {
+            //  numberOfSides = 3;
+            //}
+            
+            delay(2000);
+            resetCube();
+            pause = false;
           }
         } else {
           pause = true; 
@@ -166,12 +188,9 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
     char f2 = middlePiece.getFace(c2);
     if (f1 != 'F') {
       String temp =  getDirection(f1, 'F');
-      //println(f1, "F", temp);
 
       turns+=temp;
-      //println("temp1 " + temp);
       if (moreTurns()) {
-        //println("Turnes" + turns);
         return;
       }
     }
@@ -187,7 +206,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
         turns+="Z";
       }
       if (moreTurns()) {
-        //println("Turnes" + turns);
 
         return;
       }
@@ -203,10 +221,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       }
     } 
 
-    //println("pairirir");
-    for (int i = 0; i<parityPositions.size(); i++) {
-      //println(parityPositions.get(i));
-    } 
     //ok now lets fuck em up
     moveAllParities(parityPositions, 0, false, false);
     turnOs.add( charToTurnO('U', true));
@@ -239,11 +253,9 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
   void moveAllParities(ArrayList<Integer> parities, int axis, boolean clockwise, boolean left) {
     for (int i = 0; i< parities.size(); i++) {
       if (left &&  parities.get(i)<middle) {
-        //println("herherherherherher");
         turnOs.add(new TurnO(0, parities.get(i), clockwise));
       }
       if (!left &&  parities.get(i)>middle) {
-        //println("herherherherherherRIGHT");
 
         turnOs.add(new TurnO(0, parities.get(i), !clockwise));
       }
@@ -276,7 +288,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
         String edgeFaces = target.getFaces();
         turnOs.addAll(moveEdgeToFrontLeft(edgeFaces.charAt(0), edgeFaces.charAt(1)));
         if (moreTurns()) {
-          //println("ahh");
           newTarget = false;
           return;
         }
@@ -291,7 +302,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
         if (target.getColorFromFace(rightMostTargetFace) == edgeCenter.getColorFromFace(rightMostCenterFace)) {
-          //println("this");
           //todo check if its already in position
           if (rightMostTargetFace == 'F') { 
             turnOs.add( charToTurnO('L', true));
@@ -305,7 +315,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
           return;
         }
 
-        //println(targetFaces, centerFaces, rightMostTargetFace, rightMostCenterFace, "also im here");
         //now the target is facing the opposite direction to the thing
         turnOs.addAll(getTurnObjects(rightMostCenterFace, rightMostTargetFace, (int)(n-1-target.pos.y), 1));
         if (targetFaces.indexOf(rightMostTargetFace) ==0) {
@@ -316,8 +325,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
         turnOs.addAll(getTurnObjects(rightMostTargetFace, rightMostCenterFace, (int)(n-1-target.pos.y), 1));
         newTarget = true;
         return;
-      } else if (cube.blocks[n-1][i][n-1].getFace(c1) !=edgeCenter.getFace(c1)) {
-        //println("fuck oh");
       }
       //newTarget = true;
     }
@@ -515,7 +522,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
   ArrayList<TurnO> getEdgeFlippingTurns(char leftFace, char rightFace) {
     ArrayList<TurnO> t = new ArrayList();
-    //println(leftFace, rightFace);
     t.add(charToTurnO(rightFace, true));
     t.add(charToTurnO(leftFace, false));
     t.add(charToTurnO('U', true));
@@ -641,14 +647,12 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
   void doYellowRow(int y) {
     switch(rowStage) {
     case 0:
-      //println(0);
       turnOs.add(new TurnO(1, y, false)); //bring it out
       turnOs.add(charToTurnO('F', true));
       rowStage++;
       return;
 
     case 1:
-      //println(1);
       for (int i = middle-1; i> -middle; i--) {
         int xPos = n-1-y;
         if (!cube.blocks[xPos][middle-i][n-1].matchesColors(yellow)) {
@@ -661,7 +665,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       rowStage++;
       return;
     case 2:
-      //println(2);
       turnOs.add(charToTurnO('F', false));
       turnOs.add(new TurnO(1, y, true));
       rowStage++;
@@ -709,13 +712,11 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
       if (found) {
-        //println("foundItcubt");
         adds.addAll(getTurnObjects(faceChar, targetFace, middle-yIndex, axis));
         turnOs.addAll(adds);
 
         if (faceNo ==3) {
           if (middle - yIndex < n-1-rowNo) { //if gonna fuck up previously done stuff
-            //println(middle, yIndex, n, rowNo);
             turnOs.add(charToTurnO('F', false));//get the thing back into its row 
             while (adds.size() >0) {//reverse the movements
               turnOs.add(adds.remove(adds.size()-1).getReverse());
@@ -750,8 +751,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
     //checked faces and none found
-    //println("oi mate its fuckede");
-    //println(targetFace, pieceColor, xIndex, yIndex, axis, rowNo, faceNo);
     getToLRB(targetFace, pieceColor, xIndex, yIndex, axis, rowNo, faceNo);
   }
 
@@ -782,7 +781,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
       for (int j = 0; j< 4; j++) {
         if (face[xMatrix][yMatrix].matchesColors(pieceColor)) {
-          //println(faceChar, xMatrix, yMatrix);
           if (faceChar != 'L' || n-1-rowNo<= yMatrix) {
             if (faceChar == 'D') {
               if (!rowFinished('D', xMatrix, pieceColor)) {
@@ -801,8 +799,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
               found = true;
               break;
             }
-          } else {
-            //println("here 782");
           }
         }
         int temp = xRel;
@@ -867,7 +863,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
           case 'L':
 
             if (yRel == yIndex && xRel == xIndex) {
-              //println("get it out", yRel, xRel);
               adds.add(new TurnO(1, yMatrix, false));
             } else {
               adds.add(new TurnO(1, yMatrix, true));
@@ -881,8 +876,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
             return;
           }
-        } else {
-          //println("not found and thats nor great");
         }
       } else if (found) {
         switch(faceChar) {
@@ -919,7 +912,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
           return;
 
         case 'D':
-          //println("<--------------------------------------------its down boi");
           //cube.rotationSpeed = PI/50.0;
           adds.add(charToTurnO('D', true));
           //adds.add(charToTurnO('L', true));
@@ -936,7 +928,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
         }
       }
     }
-    //println("FUCKUCKCUCKCUKCUCKCUC<MCUKCUCKCKCKKCKCKK");
   }
   //  STAGE 3L
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -944,7 +935,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   void ThirdCenter() {
-    //println("-------------------------------------------------");
     //cube.rotationSpeed = PI/20.0;
     //if (!doneRedCenterRow) {
     //  doRedRow(middle);
@@ -969,14 +959,12 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
   void doRedRow(int y) {
     switch(rowStage) {
     case 0:
-      //println(0);
       turnOs.add(new TurnO(1, y, false)); //bring it out
       turnOs.add(charToTurnO('F', true));
       rowStage++;
       return;
 
     case 1:
-      //println(1);
       for (int i = middle-1; i> -middle; i--) {
         int xPos = n-1-y;
         if (!cube.blocks[xPos][middle-i][n-1].matchesColors(red)) {
@@ -989,7 +977,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       rowStage++;
       return;
     case 2:
-      //println(2);
       turnOs.add(charToTurnO('F', false));
       turnOs.add(new TurnO(1, y, true));
       rowStage++;
@@ -1062,7 +1049,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
     switch(rowStage) {
 
     case 0:
-      //println("stage 0");
       for (int i = middle-1; i> -middle; i--) {
         if (!cube.blocks[x][middle-i][n-1].matchesColors(blue)) {
           fillFaceGap('F', blue, x-middle, i, 1, x, 2);
@@ -1074,7 +1060,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       rowStage++;
       return;
     case 1:
-      //println("stage 1");
       boolean uppyUppy = false;
       if (rowFinished('U', n-1-x, blue)) {
         uppyUppy = true;
@@ -1133,8 +1118,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
           for (int j = 0; j< 4; j++) {
             if (face[xMatrix][yMatrix].matchesColors(blue)) {
-              //println("found piece requires " + i + "face turns");
-              ////println(f aceChar,);
               for (int l = 0; l<j; l++) {
                 adds.add(charToTurnO(faceChar, false));
               } 
@@ -1175,7 +1158,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
         //checked faces and none found
-        //println("oi mate its fuckede");
         //getToLRB(targetFace, pieceColor, xIndex, yIndex, axis, rowNo);
       }
     }
@@ -1257,12 +1239,10 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
   void doGreenRow(int x) {
     switch(rowStage) {
     case 0:
-      //println("stage 0");
       turnOs.add(new TurnO(0, x, false));
       rowStage++;
       return;
     case 1:
-      //println("stage 1");
       for (int i = middle-1; i> -middle; i--) {
         if (!cube.blocks[x][middle-i][n-1].matchesColors(green)) {
           fillFaceGap('F', green, x-middle, i, 1, x);
@@ -1274,7 +1254,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       rowStage++;
       return;
     case 2:
-      //println("stage 2");
       turnOs.add(new TurnO(0, x, true));
       rowStage++;
       return;
@@ -1299,8 +1278,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
       for (int j = 0; j< 4; j++) {
         if (face[xMatrix][yMatrix].matchesColors(pieceColor)) {
-          //println("found piece requires " + i + "face turns");
-          ////println(f aceChar,);
           for (int k = 0; k<j; k++) {
             adds.add(charToTurnO(faceChar, false));
           } 
@@ -1325,14 +1302,12 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
     //checked faces and none found
-    //println("oi mate its fuckede");
     getToLRB(targetFace, pieceColor, xIndex, yIndex, axis, rowNo);
   }
 
 
   //this only works for y axis at the moment
   void getToLRB(char targetFace, color pieceColor, int xIndex, int yIndex, int axis, int rowNo) {
-    //println("lolololololololololo ");
     String faces = "DFU";
     ArrayList<TurnO> adds = new ArrayList();
     char faceChar = 'N';
@@ -1352,17 +1327,14 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
       for (int j = 0; j< 4; j++) {
         if (face[xMatrix][yMatrix].matchesColors(pieceColor)) {
-          ////println(f aceChar,);
 
           if (faceChar == 'D') {
 
             if (!rowFinished('D', xMatrix, green) || xRel == xIndex ) {
-              //println("its NICEEEEEEEEE");
 
               found = true;
               break;
             } else {
-              //println("its hererererereerer");
               int temp = xRel;
               xRel = yRel;
               yRel = -temp ;
@@ -1406,7 +1378,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
           return;
 
         case 'D':
-          //println("its here boiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
           //cube.rotationSpeed = PI/50.0;
           adds.add(charToTurnO('D', true));
           //adds.add(charToTurnO('L', true));
@@ -1421,9 +1392,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
           turnOs.addAll(adds);
           return;
         }
-      } else {
-        //println("offfofofofofofofofofofofo"); 
-        //pause = true;
       }
     }
 
@@ -1497,7 +1465,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
     //now blue is down
     if (correctRotation(cube.blocks[n-1][n-1][n-1])) {
       if (turnsDone==4) {
-        ////println("FUCK you I did it");
         stageNo++;
         return;
       } else {
@@ -1524,7 +1491,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
     Block correctPiece = cube.blocks[0][0][0];
 
     Block testPiece = cube.blocks[0][0][0];
-    ////println("enteringthe thing");
 
     if (cornerInCorrectPosition('L', 'U', 'B', testPiece)) {
       correctCounter ++;
@@ -1548,26 +1514,21 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
     }
 
     if (correctCounter ==4) {
-      ////println("allgbro");
       stageNo++;
       return;
     }
 
     if (correctCounter ==0) {
-      ////println("none of them are good mate");
       turns += "URU'L'UR'U'L";
       return;
     }
 
 
     //only one is correct
-    ////println("only one is tops  aye");
     String temp =getDirectionsCorners(correctPiece.pos, new PVector(n-1, 0, n-1));
-    ////println("temp:" + temp);
     turns+=temp;
     turns+="URU'L'UR'U'L";
     turns += reverseDirections(temp);
-    ////println("reverse Temp:" +  reverseDirections(temp));
   }
 
 
@@ -1580,21 +1541,12 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
     if (piece.getFace(c1) == ' ') {
       return false;
-    } else {
-
-      ////println((piece.getFace(c1)));
     }
     if (piece.getFace(c2) == ' ') {
       return false;
-    } else {
-
-      ////println((piece.getFace(c2)));
     }
     if (piece.getFace(c3) == ' ') {
       return false;
-    } else {
-
-      ////println((piece.getFace(c3)));
     }
     return true;
   }
@@ -1734,7 +1686,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
         return;
       }
       completedEdges++;
-      //////println("Next edge");
     }
     stageNo++;
   }
@@ -1747,7 +1698,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
     color[] cols = {c1, c2};
     Block piece = findCenterEdge(cols);
     if (piece.pos.y ==0) {//top layer
-      //////println("edge in top layer");
       color frontColor;
       if (piece.colors[2] == c1) {
         frontColor = c2;
@@ -1757,21 +1707,17 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
       if (getFaceColor('F') != frontColor) {
         positionFace(frontColor, 'F', 'Y');
-        //////println("turning to face");
 
         return;
       }
 
-      //////println("facing correct direction");
       String temp = getDirectionsEdges(piece.pos, new PVector(middle, 0, n-1));
       if (!temp.equals("")) {
-        //////println("positioning edge:" + temp);
         turns+=temp;
         return;
       }
       //now the piece is in the top center
 
-      //////println("piece in top center");
       if (frontColor == c1) {//need to put it in the right 
         turns += "URU'R'U'F'UF";
       } else {
@@ -1779,7 +1725,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       }
     } else if (piece.pos.y ==middle) {
 
-      //////println("edge in second layer");
       boolean inCorrectSpotAndRotation = true;
       if (piece.colors[2] == c1) {
         color frontColor = c2;
@@ -1793,15 +1738,12 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       if (!inCorrectSpotAndRotation) {
         //then its not in the right position
         //take it out 
-        //////println("edge in wrong spot direction");
 
         turnCubeToFacePiece(piece, c1, 'Y') ;
         if (turns.length() !=0) {
-          //////println("turning cube");
           return;
         }
 
-        //////println("get that shit out of here");
 
         if (piece.pos.x == n-1) {
           turns += "URU'R'U'F'UF";
@@ -1866,7 +1808,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
         //take it out 
         String temp = getDirectionsCorners(piece.pos, new PVector(n-1, n-1, n-1));
         turns+= temp;
-        ////////println("temp:" + temp);
         turns+= "RUR'";
         turns += reverseDirections(temp);
       }
@@ -1879,7 +1820,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
   //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
   void greenCross() {
     if (!(getFaceColor('D') == green)) {
-      ////////println("Shit man");
       positionFace(green, 'D', 'X');
       return;
     }
@@ -1942,7 +1882,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
       }
     }
     if (piece.pos.y==0) {//if in the top row
-      ////////println("y=0");
 
       if (getFaceColor('F') != col) {
         positionFace(col, 'F', 'Y');//face the desired color to the front
@@ -1960,7 +1899,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
         String temp = getTurns(pieceFace, 'F', 0);
         temp = replaceDoubles(temp, 'U');
-        ////////println(pieceFace, turns);
 
         turns +=temp;
       }
@@ -2010,8 +1948,9 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
   Block findCenterEdge(color[] pieceColors) {
-    for (int i = 0; i< edgeCenters.length; i++) { 
-      PVector vec = edgeCenters[i];
+  
+    for (int i = 0; i< cube.edgeCenters.length; i++) { 
+      PVector vec = cube.edgeCenters[i];
       int x = (int)vec.x;
       int y = (int)vec.y;
       int z = (int)vec.z;
@@ -2165,7 +2104,6 @@ class CubeAlgorithms { //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// /
 
 
   TurnO charToTurnO(char c, boolean clockwise) {
-    //println(c);
     int axis =0;
     int index=0;
     switch(c) {
